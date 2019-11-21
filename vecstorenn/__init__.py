@@ -45,7 +45,9 @@ class VecStorage:
             index_path = path + ".idx"
             data_path = path
             if not self.readonly:
-                os.makedirs(dirname(path), exist_ok=True)
+                dir = dirname(path)
+                if dir:
+                    os.makedirs(dir, exist_ok=True)
         self.index = lmdb.open(index_path, readonly=self.readonly, subdir=False)
         self.data = open(data_path, ("r" if self.readonly else "w") + "b")
         self.vec_width = vec_width
@@ -79,7 +81,7 @@ class VecStorage:
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, *exc):
         self.index.close()
         self.data.close()
 
