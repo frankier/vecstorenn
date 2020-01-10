@@ -14,6 +14,7 @@ NEG_INF = float("-inf")
 TYPE = float32
 IND_HEADER_STRUCT = Struct("<I")  # offset
 HEADER_STRUCT = Struct("<II")  # offset, length
+DEFAULT_MAP_SIZE = 2 * 1024 ** 3
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ class VecStorage:
         i: mapping addresses individual vectors rather than groups of vectors
     """
 
-    def __init__(self, path, vec_width, mode="r", value_bytes=0):
+    def __init__(self, path, vec_width, mode="r", value_bytes=0, map_size=DEFAULT_MAP_SIZE):
         self.mode = mode
         self.readonly = "r" in self.mode
         self.grouped = "i" not in self.mode
@@ -48,7 +49,7 @@ class VecStorage:
                 dir = dirname(path)
                 if dir:
                     os.makedirs(dir, exist_ok=True)
-        self.index = lmdb.open(index_path, readonly=self.readonly, subdir=False)
+        self.index = lmdb.open(index_path, readonly=self.readonly, subdir=False, map_size=map_size)
         self.data = open(data_path, ("r" if self.readonly else "w") + "b")
         self.vec_width = vec_width
         self.value_bytes = value_bytes
