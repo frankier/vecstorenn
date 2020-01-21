@@ -68,7 +68,7 @@ class VecStorage:
             self.mmap = mmap.mmap(self.data.fileno(), length=0, access=mmap.ACCESS_READ)
             self.mmap_vec = numpy.ndarray.__new__(
                 numpy.ndarray,
-                shape=(self.total_rows, self.vec_width),
+                shape=(self.total_rows, self.stride_dtypes),
                 dtype=TYPE,
                 buffer=self.mmap,
                 offset=0,
