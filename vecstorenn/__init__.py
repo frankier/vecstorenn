@@ -83,6 +83,9 @@ class VecStorage:
         return self
 
     def __exit__(self, *exc):
+        self.close()
+
+    def close(self):
         self.index.close()
         self.data.close()
 
