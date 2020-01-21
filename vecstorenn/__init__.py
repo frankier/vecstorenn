@@ -140,6 +140,9 @@ class VecStorage:
         else:
             self.data.write(memoryview(payload))
 
+    def get_all(self, key):
+        return self.mmap_vec[:, : self.vec_width]
+
     def get_vec(self, key):
         assert not self.grouped
         with self.index.begin(write=False, buffers=True) as txn:
