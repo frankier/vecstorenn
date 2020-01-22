@@ -140,7 +140,7 @@ class VecStorage:
         else:
             self.data.write(memoryview(payload))
 
-    def get_all(self, key):
+    def get_all(self):
         return self.mmap_vec[:, : self.vec_width]
 
     def get_vec(self, key):
