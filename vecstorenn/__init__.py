@@ -99,11 +99,14 @@ class VecStorage:
         return f"<VecStorage path={self.path} mode={self.mode} rows={self.total_rows} vec_width={self.vec_width} value_bytes={self.value_bytes} value_bytes_padded={self.value_bytes_padded}{rest}>"
 
     def add_vec(self, key, vec):
+        self.add_vec_bytes(key.encode("utf-8"), vec)
+
+    def add_vec_bytes(self, key, vec):
         assert not self.grouped
         self._write_vector(vec)
         with self.index.begin(write=True) as txn:
             txn.put(
-                key.encode("utf-8"),
+                key,
                 IND_HEADER_STRUCT.pack(self.total_rows),
             )
         self.total_rows += 1
